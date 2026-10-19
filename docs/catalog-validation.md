@@ -26,3 +26,12 @@ Tests validate catalog uniqueness, categories, local assets, accent-insensitive 
 ## Scope notes
 
 The home and catalog copy was rebuilt using verified product information. Older blog and FBO article content is preserved and is not a new certification or fact-check of those legacy claims. No checkout, CRM, email collection, new analytics provider or production deployment is introduced by this branch.
+
+## Preview browser validation (2026-10-19)
+
+- Vercel preview reached READY; desktop layout checked at 1180 CSS px, with no broken images or document overflow.
+- Narrow responsive layout checked at 393 CSS px using browser page zoom; document width stayed within the viewport. This is a responsive CSS check, not a physical-device test.
+- Category filtering, accented search, empty-state reset, loading more items, interest-specific WhatsApp text, FAQ expansion, deep-link query filters, detail navigation and mobile menu/Escape all passed.
+- No application console errors observed (the browser extension emitted its own unrelated metadata error).
+- Replaced plain arrow characters in static detail pages with SVG icons after visual review.
+- No enquiry was actually sent during testing.
