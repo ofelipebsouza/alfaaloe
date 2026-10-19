@@ -23,7 +23,7 @@ The `null` default deliberately preserves the existing provisional signature. No
 - Approved six-color palette and reusable spacing, radius and timing tokens: `src/styles/tokens.css`.
 - Display metadata and centralized mark configuration: `src/lib/brand.ts`.
 - Styleguide color tests enforce exact CSS/display parity.
-- Montserrat remains the heading family; Inter remains the interface/body family. No new font or package was added.
+- Montserrat remains the heading family; Inter remains the interface/body family; the existing Playfair Display family is used as a restrained editorial accent. No new font or package was added.
 
 ## Motion and interaction
 
@@ -47,3 +47,14 @@ npm test
 In a restricted environment, point npm's cache and Astro's configuration directory at writable temporary directories. This does not change application configuration or dependencies.
 
 The tests cover all 28 original products, source/image paths, generated routes and metadata, verified WhatsApp links, new route semantics, palette/spacing parity, a single-point logo replacement, and motion safety contracts. Interactive desktop/narrow-viewport checks complement those static checks.
+
+### Browser QA on the Vercel preview
+
+Checked in cloud Chrome at 1180px and a 393px CSS viewport using browser zoom (responsive layout check, not physical-device emulation):
+
+- All three pages: no horizontal page overflow or broken images.
+- Styleguide: color-copy feedback, keyboard activation, filter selection, empty demo search, details and replay.
+- Branding: interactive voice examples, application details, mobile menu and Escape dismissal.
+- Biolink: verified catalog/category/WhatsApp destinations, canonical production link copy and keyboard focus. No real messages or external shares sent.
+- Catalog: category/search URL state, Back/Forward, repeated filters, empty reset, 12 → 24 → 28 products and focus on the first newly added card for keyboard users.
+- Reduced-motion behavior: automated initial/live-preference observer tests and CSS review, rather than device preference emulation.
