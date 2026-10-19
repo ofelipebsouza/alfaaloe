@@ -1,0 +1,24 @@
+/* Approved Alfa Aloe palette. Keep COLOR_TOKENS in lib/brand.ts in sync. */
+:root {
+  --aa-ink: #20372a;
+  --aa-muted: #68736a;
+  --aa-green: #8fcf65;
+  --aa-soft: #eff4e9;
+  --aa-paper: #fdfdf9;
+  --aa-line: #dfe6dc;
+  --aa-space-4: 4px;
+  --aa-space-8: 8px;
+  --aa-space-12: 12px;
+  --aa-space-16: 16px;
+  --aa-space-24: 24px;
+  --aa-space-32: 32px;
+  --aa-space-48: 48px;
+  --aa-space-64: 64px;
+  --aa-radius-card: 12px;
+  --aa-radius-pill: 99px;
+  --aa-duration-fast: 180ms;
+  --aa-duration-reveal: 480ms;
+  --aa-ease-out: cubic-bezier(.2,.7,.2,1);
+}
+.aa-brand-mark { display:inline-flex; }
+.aa-official-logo { display:block; width:auto; max-width:190px; height:auto; max-height:48px; object-fit:contain; }

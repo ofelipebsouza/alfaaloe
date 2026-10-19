@@ -1,0 +1,154 @@
+---
+import '../styles/motion.css';
+---
+
+<script>
+  // A progressive enhancement: the document is always visible without this script.
+  // Observe content, never the site/main wrappers that contain sticky or fixed UI.
+  const revealSelector = [
+    '[data-reveal]',
+    '.aa-hero-copy > h1',
+    '.aa-hero-copy > p',
+    '.aa-hero-visual',
+    '.aa-section-heading',
+    '.aa-routine-visual',
+    '.aa-routine-copy',
+    '.aa-steps > div',
+    '.aa-lead > div:first-child',
+    '.aa-lead-panel',
+    '.aa-faq > div:first-child',
+    '.aa-faq details',
+    '.aa-fbo-note > div',
+    '.aa-catalog-intro h1',
+    '.aa-detail-image',
+    '.aa-detail-copy > h1',
+  ].join(',');
+
+  function enhanceMotion() {
+    const sites = document.querySelectorAll<HTMLElement>('.aa-site');
+    if (!sites.length || !('IntersectionObserver' in window) || !Element.prototype.animate) return () => {};
+
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const seen = new WeakSet<Element>();
+    const animations = new Map<Element, Animation>();
+    const pending = new Set<HTMLElement>();
+
+    function cancelAnimation(element: Element) {
+      animations.get(element)?.cancel();
+      animations.delete(element);
+    }
+
+    function skip(element: HTMLElement) {
+      observer.unobserve(element);
+      pending.delete(element);
+      seen.add(element);
+      cancelAnimation(element);
+    }
+
+    function reveal(element: HTMLElement, index: number) {
+      skip(element);
+      if (preference.matches || element.contains(document.activeElement)) return;
+
+      // Opt-in markers must not turn a fixed/sticky descendant's ancestor into
+      // a containing block. Skip that uncommon case rather than disturb the UI.
+      const positioned = [element, ...element.querySelectorAll<HTMLElement>('*')]
+        .some(node => ['fixed', 'sticky'].includes(getComputedStyle(node).position));
+      if (positioned) return;
+
+      const animation = element.animate(
+        [{ opacity: 0.62, translate: '0 12px' }, { opacity: 1, translate: '0 0' }],
+        { duration: 460, delay: Math.min(index, 3) * 35, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'none' },
+      );
+      animations.set(element, animation);
+      animation.addEventListener('finish', () => animations.delete(element), { once: true });
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      let index = 0;
+      for (const entry of entries) {
+        if (entry.isIntersecting) reveal(entry.target as HTMLElement, index++);
+      }
+    }, { threshold: 0.08 });
+
+    function observe(element: HTMLElement) {
+      if (seen.has(element) || pending.has(element) || !element.closest('.aa-site')) return;
+      // Prefer the nearest content unit if a page marks a whole section as well
+      // as its children. This avoids compounded transforms and long animations.
+      if (element.querySelector(revealSelector)) return;
+      if (preference.matches || element.contains(document.activeElement)) {
+        skip(element);
+        return;
+      }
+      pending.add(element);
+      observer.observe(element);
+    }
+
+    function scan(root: ParentNode) {
+      if (root instanceof HTMLElement && root.matches(revealSelector)) observe(root);
+      root.querySelectorAll<HTMLElement>(revealSelector).forEach(observe);
+    }
+
+    // React may hydrate later or add cards after filtering/loading more.
+    const mutations = new MutationObserver(records => {
+      for (const record of records) {
+        record.addedNodes.forEach(node => { if (node instanceof HTMLElement) scan(node); });
+      }
+      for (const element of pending) if (!element.isConnected) skip(element);
+      for (const element of animations.keys()) if (!element.isConnected) cancelAnimation(element);
+    });
+    sites.forEach(site => {
+      scan(site);
+      mutations.observe(site, { childList: true, subtree: true });
+    });
+
+    function onCatalogUpdate(event: Event) {
+      if (!(event.target instanceof HTMLElement)) return;
+      const reset = (event as CustomEvent<{ reset: boolean }>).detail?.reset;
+      event.target.querySelectorAll<HTMLElement>('.aa-product-card, .aa-empty').forEach(element => {
+        if (reset) {
+          cancelAnimation(element);
+          observer.unobserve(element);
+          pending.delete(element);
+          seen.delete(element);
+        }
+        observe(element);
+      });
+    }
+
+    // Focus/click targets settle immediately; no waiting for a visual effect.
+    function onInteraction(event: Event) {
+      if (!(event.target instanceof Element)) return;
+      for (const element of pending) if (element.contains(event.target)) skip(element);
+      for (const element of animations.keys()) if (element.contains(event.target)) cancelAnimation(element);
+    }
+
+    function onPreferenceChange() {
+      if (!preference.matches) return;
+      for (const element of pending) skip(element);
+      for (const element of animations.keys()) cancelAnimation(element);
+    }
+
+    document.addEventListener('aa:catalog-update', onCatalogUpdate);
+    document.addEventListener('focusin', onInteraction);
+    document.addEventListener('pointerdown', onInteraction, { passive: true, capture: true });
+    preference.addEventListener('change', onPreferenceChange);
+
+    return () => {
+      observer.disconnect();
+      mutations.disconnect();
+      animations.forEach(animation => animation.cancel());
+      document.removeEventListener('aa:catalog-update', onCatalogUpdate);
+      document.removeEventListener('focusin', onInteraction);
+      document.removeEventListener('pointerdown', onInteraction, true);
+      preference.removeEventListener('change', onPreferenceChange);
+    };
+  }
+
+  let cleanup = enhanceMotion();
+  // Safe if Astro client-side navigation is added later; no duplicate observers.
+  document.addEventListener('astro:before-swap', () => cleanup());
+  document.addEventListener('astro:page-load', () => {
+    cleanup();
+    cleanup = enhanceMotion();
+  });
+</script>
