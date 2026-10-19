@@ -1,20 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LinksPage from '../sections/LinksPage';
-
+import '../styles/brand-pages.css';
+import { getCanonicalUrl } from '../lib/seo-config';
 const breadcrumbs = [
-  { name: 'Home', url: 'https://www.alfaaloe.com.br/' },
-  { name: 'Links', url: 'https://www.alfaaloe.com.br/links/' },
+  { name: 'Início', url: getCanonicalUrl('/') },
+  { name: 'Links', url: getCanonicalUrl('/links') },
 ];
 ---
-
-<Layout 
-  title="Especialista Forever Living | Links e Informações"
-  description="Acesse todos os meus links: Catálogo Forever Living, Oportunidade FBO, Blog e Contato Direto."
-  image="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1200&auto=format&fit=crop"
-  type="website"
-  schemaType="website"
-  schemaBreadcrumbs={breadcrumbs}
->
+<Layout title="Alfa Aloe | Catálogo e WhatsApp" description="Os caminhos para encontrar seu próximo cuidado. Explore os produtos Forever no catálogo da Alfa Aloe ou converse pelo WhatsApp." schemaBreadcrumbs={breadcrumbs}>
   <LinksPage client:load />
 </Layout>

@@ -1,0 +1,122 @@
+/* Small, finite gestures. No hidden initial states or animation dependencies. */
+.aa-site .aa-filters button,
+.aa-site .aa-interest-options button,
+.aa-site .aa-interest-options button > span,
+.aa-site .aa-search,
+.aa-site .aa-product-image,
+.aa-site .aa-product-arrow,
+.aa-site .aa-floating-chat,
+.aa-header .aa-menu-button {
+  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, color 180ms ease;
+}
+
+.aa-site .aa-button > svg,
+.aa-header .aa-button > svg,
+.aa-site .aa-text-link > svg,
+.aa-site .aa-complete-catalog > svg,
+.aa-site .aa-product-actions a > svg,
+.aa-site .aa-product-arrow > svg,
+.aa-site .aa-faq summary > span {
+  transition: transform 220ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.aa-site .aa-product-card:focus-within .aa-product-image {
+  box-shadow: 0 0 0 2px var(--aa-line), 0 8px 24px #20372a0a;
+}
+
+.aa-site .aa-product-image:focus-visible img {
+  transform: scale(1.035) rotate(-1deg);
+}
+
+.aa-site .aa-button:focus-visible > svg,
+.aa-header .aa-button:focus-visible > svg,
+.aa-site .aa-text-link:focus-visible > svg,
+.aa-site .aa-complete-catalog:focus-visible > svg,
+.aa-site .aa-product-actions a:focus-visible > svg {
+  transform: translateX(3px);
+}
+
+.aa-site .aa-product-image:focus-visible .aa-product-arrow,
+.aa-site .aa-product-image:hover .aa-product-arrow {
+  background: var(--aa-paper);
+  border-color: #a8bc9a;
+}
+
+.aa-site .aa-filters button:active,
+.aa-site .aa-interest-options button:active {
+  border-color: #6a8952;
+}
+
+.aa-site .aa-button:active,
+.aa-header .aa-button:active {
+  transform: translateY(0);
+}
+
+.aa-site .aa-faq details[open] > p {
+  animation: aa-answer-in 240ms ease-out;
+}
+
+@keyframes aa-answer-in {
+  from { opacity: .65; translate: 0 -4px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .aa-site .aa-product-image:hover {
+    box-shadow: 0 8px 24px #20372a0a;
+  }
+
+  .aa-site .aa-button:hover > svg,
+  .aa-header .aa-button:hover > svg,
+  .aa-site .aa-text-link:hover > svg,
+  .aa-site .aa-complete-catalog:hover > svg,
+  .aa-site .aa-product-actions a:hover > svg {
+    transform: translateX(3px);
+  }
+
+  .aa-site .aa-product-image:hover .aa-product-arrow > svg {
+    transform: translate(1px, -1px);
+  }
+
+  .aa-site .aa-floating-chat:hover {
+    background: #355039;
+    box-shadow: 0 7px 22px #20372a24;
+  }
+
+  .aa-site .aa-interest-options button:hover,
+  .aa-header .aa-menu-button:hover {
+    border-color: #6a8952;
+  }
+}
+
+@media (hover: none) {
+  .aa-site .aa-button:hover,
+  .aa-header .aa-button:hover,
+  .aa-site .aa-product-image:hover img {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .aa-site *, .aa-site *::before, .aa-site *::after,
+  .aa-header *, .aa-header *::before, .aa-header *::after,
+  .aa-footer *, .aa-footer *::before, .aa-footer *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .aa-site .aa-button,
+  .aa-header .aa-button,
+  .aa-site .aa-product-image img,
+  .aa-site .aa-button > svg,
+  .aa-header .aa-button > svg,
+  .aa-site .aa-text-link > svg,
+  .aa-site .aa-complete-catalog > svg,
+  .aa-site .aa-product-actions a > svg,
+  .aa-site .aa-product-arrow > svg {
+    transform: none !important;
+  }
+}

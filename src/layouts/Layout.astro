@@ -3,6 +3,7 @@ import '../index.css';
 import SEO from '../components/SEO.astro';
 import SchemaOrg from '../components/SchemaOrg.astro';
 import Tracking from '../components/Tracking.astro';
+import MotionEnhancer from '../components/MotionEnhancer.astro';
 import { getCanonicalUrl } from '../lib/seo-config';
 
 export interface Props {
@@ -75,5 +76,6 @@ const canonicalUrl = getCanonicalUrl(Astro.url.pathname);
   </head>
   <body>
     <slot />
+    <MotionEnhancer />
   </body>
 </html>

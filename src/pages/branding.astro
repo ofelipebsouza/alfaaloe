@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BrandingPage from '../sections/BrandingPage';
+import '../styles/brand-pages.css';
+import { getCanonicalUrl } from '../lib/seo-config';
+const breadcrumbs = [
+  { name: 'Início', url: getCanonicalUrl('/') },
+  { name: 'Branding', url: getCanonicalUrl('/branding') },
+];
+---
+<Layout title="Branding | O universo Alfa Aloe" description="Conheça a direção de marca da Alfa Aloe: cores, linguagem, referências visuais e orientações para uma comunicação clara e próxima." schemaBreadcrumbs={breadcrumbs}>
+  <BrandingPage client:load />
+</Layout>
