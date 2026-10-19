@@ -1,0 +1,24 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ArrowUpRight } from 'lucide-react';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import CatalogLead from '../../components/CatalogLead';
+import { PRODUCTS, categoryLabel } from '../../lib/catalog';
+import { createWhatsAppLink } from '../../lib/utils';
+import { SITE, getCanonicalUrl } from '../../lib/seo-config';
+export function getStaticPaths() { return PRODUCTS.map(product => ({ params: { slug: product.slug }, props: { product } })); }
+const { product } = Astro.props;
+const related = PRODUCTS.filter(item => item.category === product.category && item.slug !== product.slug).slice(0, 3);
+const schema = { '@context': 'https://schema.org', '@type': 'Product', name: product.name, description: product.description, image: new URL(product.image, SITE.url).href, brand: { '@type': 'Brand', name: 'Forever Living Products' }, url: getCanonicalUrl(`/produtos/${product.slug}`) };
+---
+<Layout title={`${product.name} | Alfa Aloe`} description={`${product.description} Conheça o produto e consulte valores e disponibilidade no atendimento Alfa Aloe.`} schemaType="website" image={new URL(product.image, SITE.url).href}>
+  <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
+  <div class="aa-site"><Header client:load/><main id="main" class="aa-product-page">
+    <div class="aa-container"><nav class="aa-breadcrumb" aria-label="Caminho da página"><a href="/">Início</a><span>/</span><a href="/catalogo">Catálogo</a><span>/</span><span>{product.name}</span></nav>
+    <div class="aa-product-detail"><div class={`aa-detail-image aa-tone-${product.category}`}><img src={product.image} alt={product.name} width="600" height="600" fetchpriority="high"/></div><div class="aa-detail-copy"><a class="aa-eyebrow" href={`/catalogo?categoria=${product.category}`}>{categoryLabel(product.category)} <ArrowUpRight size={16}/></a><h1>{product.name}</h1><p class="aa-detail-description">{product.description}</p><div class="aa-detail-note"><strong>Uma escolha com informação.</strong><p>{product.details || 'Conheça a composição, apresentação e orientações de uso na página da fabricante. No atendimento, você pode confirmar a versão comercializada e esclarecer dúvidas sobre a compra.'}</p></div><a class="aa-button aa-button-dark" href={createWhatsAppLink(`Olá! Conheci o ${product.name} no site da Alfa Aloe e gostaria de consultar valor e disponibilidade.`)} target="_blank" rel="noopener noreferrer">Consultar no WhatsApp <ArrowUpRight size={16}/></a><p class="aa-detail-disclaimer">Valor, disponibilidade, frete e prazo confirmados no atendimento. Nenhum pedido é realizado automaticamente.</p><a class="aa-text-link" href={product.source} target="_blank" rel="noopener noreferrer">Ver informações da fabricante <ArrowUpRight size={16}/></a></div></div>
+    <div class="aa-product-guidance"><span>ANTES DE ESCOLHER</span><p>Consulte o rótulo, a composição, as recomendações de uso e as restrições do produto. Suplementos não substituem uma alimentação equilibrada. Em caso de dúvidas sobre saúde, uso durante gestação ou medicamentos, procure orientação profissional.</p></div>
+    {related.length > 0 && <section class="aa-related"><div class="aa-section-heading"><h2>Continue <span>descobrindo.</span></h2><a href={`/catalogo?categoria=${product.category}`} class="aa-text-link">Ver categoria <ArrowUpRight size={16}/></a></div><div class="aa-product-grid">{related.map(item => <article class="aa-product-card"><a class={`aa-product-image aa-tone-${item.category}`} href={`/produtos/${item.slug}`}><img src={item.image} alt={item.name} width="500" height="500" loading="lazy"/><span class="aa-product-arrow"><ArrowUpRight size={16}/></span></a><div class="aa-product-info"><h3><a href={`/produtos/${item.slug}`}>{item.name}</a></h3><p>{item.description}</p><a class="aa-text-link" href={`/produtos/${item.slug}`}>Conhecer produto <ArrowUpRight size={16}/></a></div></article>)}</div></section>}
+    </div><CatalogLead client:visible/>
+  </main><Footer/></div>
+</Layout>

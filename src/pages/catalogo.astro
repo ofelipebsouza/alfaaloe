@@ -1,22 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import CatalogPage from '../sections/CatalogPage';
-
-const breadcrumbs = [
-  { name: 'Home', url: 'https://www.alfaaloe.com.br/' },
-  { name: 'Catálogo', url: 'https://www.alfaaloe.com.br/catalogo/' },
-];
 ---
-
-<Layout 
-  title="Catálogo Forever Living 2026/2027 | Baixe o PDF Oficial e Preços"
-  description="Navegue pela linha completa de Saúde, Nutrição e Beleza Forever Living. Solicite a tabela de preços oficial e compre pelo WhatsApp. Acesse o catálogo!"
-  image="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=1200&auto=format&fit=crop"
-  type="website"
-  schemaType="product"
-  schemaTitle="Catálogo Completo Forever Living"
-  schemaDescription="Linha completa de produtos para saúde, bem-estar e controle de peso elaborados com a mais pura Aloe Vera do planeta."
-  schemaBreadcrumbs={breadcrumbs}
->
+<Layout title="Catálogo Forever Living | Alfa Aloe" description="Encontre produtos Forever Living por nome e categoria. Veja detalhes de bebidas, beleza, cuidados pessoais e nutrição e consulte disponibilidade com a Alfa Aloe." schemaType="website">
   <CatalogPage client:load />
 </Layout>

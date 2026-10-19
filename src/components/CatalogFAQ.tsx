@@ -1,0 +1,8 @@
+const faqs = [
+  ['Como faço para comprar?', 'Escolha um produto e clique em “Tenho interesse”. A conversa abre no WhatsApp da Alfa Aloe com o nome do produto. No atendimento, você confirma valores, disponibilidade, formas de pagamento e entrega antes de decidir.'],
+  ['Os valores aparecem no catálogo?', 'Os valores são informados no atendimento para que você possa confirmar a condição atual de cada produto. Navegar pelo catálogo ou abrir uma conversa não gera um pedido nem uma cobrança.'],
+  ['Posso pedir ajuda para escolher?', 'Sim. Podemos explicar as categorias e informações dos produtos para ajudar na sua escolha. Orientações sobre condições de saúde, uso de suplementos ou medicamentos devem ser feitas por um profissional de saúde.'],
+  ['A Alfa Aloe é a loja oficial da Forever?', 'A Alfa Aloe é um distribuidor independente (FBO) de produtos Forever Living. Este site apresenta uma seleção do catálogo brasileiro e não é o site institucional da fabricante.'],
+  ['Como funcionam o envio e a disponibilidade?', 'Os produtos apresentados são referências do catálogo brasileiro da Forever. Estoque, frete, prazo de entrega e condições da compra são confirmados individualmente no atendimento.']
+];
+export default function CatalogFAQ() { return <section className="aa-container aa-faq" id="duvidas"><div><span className="aa-eyebrow">PARA ESCOLHER COM TRANQUILIDADE</span><h2>Dúvidas?<br/><span>Vamos simplificar.</span></h2></div><div>{faqs.map(([question, answer]) => <details key={question}><summary>{question}<span aria-hidden="true">+</span></summary><p>{answer}</p></details>)}</div></section>; }

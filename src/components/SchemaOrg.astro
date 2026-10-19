@@ -1,7 +1,8 @@
 ---
-import { SITE, BUSINESS } from '../lib/seo-config';
+import { SITE, BUSINESS, getCanonicalUrl } from '../lib/seo-config';
 
 export interface Props {
+  // Legacy page types receive basic website metadata, not unverified rich results.
   type?: 'website' | 'article' | 'faq' | 'product' | 'localBusiness' | 'breadcrumb';
   title?: string;
   description?: string;
@@ -18,8 +19,8 @@ const {
   type = 'website',
   title = SITE.name,
   description = BUSINESS.description,
-  url = Astro.url.href,
-  image = 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=1200&auto=format&fit=crop',
+  url = Astro.url.pathname,
+  image,
   publishedAt,
   modifiedAt,
   author = SITE.author,
@@ -27,224 +28,69 @@ const {
   articleBody,
 } = Astro.props;
 
-// Organization Schema
+const canonicalUrl = getCanonicalUrl(url);
+const organizationId = `${SITE.url}/#organization`;
+const websiteId = `${SITE.url}/#website`;
+
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': organizationId,
   name: SITE.name,
-  url: SITE.url,
-  logo: SITE.logo,
+  url: `${SITE.url}/`,
   description: BUSINESS.description,
-  email: BUSINESS.email,
   telephone: BUSINESS.telephone,
-  sameAs: [
-    'https://www.foreverliving.com',
-    // Adicione redes sociais aqui quando disponíveis
-  ],
-  contactPoint: {
-    '@type': 'ContactPoint',
-    telephone: BUSINESS.telephone,
-    contactType: 'customer service',
-    availableLanguage: ['Portuguese'],
-    areaServed: 'BR',
-  },
 };
 
-// LocalBusiness Schema
-const localBusinessSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'HealthAndBeautyBusiness',
-  name: BUSINESS.name,
-  description: BUSINESS.description,
-  url: SITE.url,
-  logo: SITE.logo,
-  image: image,
-  telephone: BUSINESS.telephone,
-  email: BUSINESS.email,
-  priceRange: BUSINESS.priceRange,
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: BUSINESS.address.city,
-    addressRegion: BUSINESS.address.state,
-    addressCountry: BUSINESS.address.country,
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: BUSINESS.geo.latitude,
-    longitude: BUSINESS.geo.longitude,
-  },
-  openingHoursSpecification: [
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-      opens: '08:00',
-      closes: '20:00',
-    },
-  ],
-  paymentAccepted: 'Cash, Credit Card, Debit Card, Bank Transfer',
-  currenciesAccepted: 'BRL',
-};
-
-// WebSite Schema
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
+  '@id': websiteId,
   name: SITE.name,
-  url: SITE.url,
+  url: `${SITE.url}/`,
   description: BUSINESS.description,
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: `${SITE.url}/catalogo?q={search_term_string}`,
-    },
-    'query-input': 'required name=search_term_string',
-  },
-};
-
-// Article Schema (blog posts)
-const articleSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: title,
-  description: description,
-  image: image,
-  url: url,
-  datePublished: publishedAt || new Date().toISOString(),
-  dateModified: modifiedAt || publishedAt || new Date().toISOString(),
-  author: {
-    '@type': 'Person',
-    name: author,
-    url: SITE.url,
-  },
-  publisher: {
-    '@type': 'Organization',
-    name: SITE.name,
-    logo: {
-      '@type': 'ImageObject',
-      url: SITE.logo,
-    },
-  },
-  mainEntityOfPage: {
-    '@type': 'WebPage',
-    '@id': url,
-  },
-  articleBody: articleBody || description,
   inLanguage: SITE.language,
+  publisher: { '@id': organizationId },
 };
 
-// FAQPage Schema
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'Os produtos da Forever Living são naturais?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Sim, a Forever Living é a maior plantadora e processadora global de Aloe Vera. Nossos principais produtos utilizam o gel 100% puro do interior da folha da babosa, livre de conservantes artificiais agressivos, estabilizado através de um processo exclusivo que garante todos os nutrientes.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Como faço para comprar os produtos com segurança?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Você pode solicitar o catálogo ou realizar seus pedidos diretamente comigo, seu Especialista e Distribuidor Oficial Autorizado. Basta clicar em qualquer botão de WhatsApp na página, me enviar uma mensagem, e eu auxiliarei na escolha correta e realizarei o envio seguro para sua casa pela logística oficial.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Por que a Aloe Vera da Forever é diferente?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Nós controlamos todo o processo, da planta para o produto, para você. Utilizamos apenas a parte mais interna da folha de Aloe Barbadensis Miller. Nossas bebidas de Aloe Vera possuem a prestigiada certificação IASC, sendo garantidos com até 99,7% de pureza do gel interior da folha.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Como funciona a oportunidade de negócio (FBO)?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Ao se tornar um Forever Business Owner (FBO), você passa a adquirir produtos com margens de desconto escalonáveis (variando de 5% a 48%) direto da fábrica. Além do lucro em revenda, você passa a ser bonificado sobre o volume de negócios movimentado pela equipe que você construir.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Existem taxas mensais ou anuidades no negócio?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Não! O Plano de Marketing da Forever Living não exige pagamento de mensalidades, anuidades ou renovações. Além disso, o nível que você alcança em nosso plano de carreira é permanente, ou seja, você jamais sofrerá rebaixamento.',
-      },
-    },
-  ],
-};
+const schemas: object[] = [organizationSchema, websiteSchema];
 
-// BreadcrumbList Schema
-const breadcrumbSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: breadcrumbs.map((crumb, index) => ({
-    '@type': 'ListItem',
-    position: index + 1,
-    name: crumb.name,
-    item: crumb.url,
-  })),
-};
-
-// Product Schema
-const productSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Product',
-  name: title,
-  description: description,
-  image: image,
-  url: url,
-  brand: {
-    '@type': 'Brand',
-    name: 'Forever Living Products',
-  },
-  manufacturer: {
-    '@type': 'Organization',
-    name: 'Forever Living Products',
-    url: 'https://www.foreverliving.com',
-  },
-  offers: {
-    '@type': 'Offer',
-    url: url,
-    availability: 'https://schema.org/InStock',
-    priceCurrency: 'BRL',
-    seller: {
-      '@type': 'Organization',
-      name: SITE.name,
-    },
-  },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.8',
-    reviewCount: '1250',
-  },
-};
-
-const schemas: Record<string, object> = {
-  website: websiteSchema,
-  localBusiness: localBusinessSchema,
-  article: articleSchema,
-  faq: faqSchema,
-  product: productSchema,
-};
-
-const selectedSchema = schemas[type] || websiteSchema;
-const schemaArray = [organizationSchema, selectedSchema];
-
-if (type !== 'website' && type !== 'localBusiness') {
-  schemaArray.push(websiteSchema);
+if (type === 'article') {
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    '@id': `${canonicalUrl}#article`,
+    headline: title,
+    description,
+    url: canonicalUrl,
+    ...(image ? { image: new URL(image, `${SITE.url}/`).href } : {}),
+    ...(publishedAt ? { datePublished: publishedAt } : {}),
+    ...(modifiedAt ? { dateModified: modifiedAt } : {}),
+    author: author === SITE.author
+      ? { '@id': organizationId }
+      : { '@type': 'Person', name: author },
+    publisher: { '@id': organizationId },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+    ...(articleBody ? { articleBody } : {}),
+    inLanguage: SITE.language,
+  });
 }
 
 if (breadcrumbs.length > 0) {
-  schemaArray.push(breadcrumbSchema);
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((crumb, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: crumb.name,
+      item: getCanonicalUrl(crumb.url),
+    })),
+  });
 }
+
+// Escaping '<' prevents content from terminating the JSON-LD script element.
+const jsonLd = JSON.stringify(schemas).replace(/</g, '\\u003c');
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(schemaArray)} />
+<script type="application/ld+json" set:html={jsonLd} />

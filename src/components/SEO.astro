@@ -1,5 +1,5 @@
 ---
-import { SITE, DEFAULT_SEO } from '../lib/seo-config';
+import { SITE, DEFAULT_SEO, getCanonicalUrl } from '../lib/seo-config';
 
 export interface Props {
   title?: string;
@@ -10,15 +10,15 @@ export interface Props {
   publishedAt?: string;
   modifiedAt?: string;
   author?: string;
-  keywords?: string[];
+  keywords?: readonly string[];
   noindex?: boolean;
 }
 
 const {
   title = DEFAULT_SEO.defaultTitle,
   description = DEFAULT_SEO.defaultDescription,
-  image = DEFAULT_SEO.defaultImage,
-  url = Astro.url.href,
+  image,
+  url = Astro.url.pathname,
   type = 'website',
   publishedAt,
   modifiedAt,
@@ -28,72 +28,53 @@ const {
 } = Astro.props;
 
 const formattedTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
-const keywordsString = keywords.join(', ');
+const canonicalUrl = getCanonicalUrl(url);
+const imageUrl = image ? new URL(image, `${SITE.url}/`).href : undefined;
 ---
 
-<!-- Meta tags básicas -->
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{formattedTitle}</title>
 <meta name="description" content={description} />
-<meta name="keywords" content={keywordsString} />
+<meta name="keywords" content={keywords.join(', ')} />
 <meta name="author" content={author} />
 <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
-<meta name="googlebot" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
+<link rel="canonical" href={canonicalUrl} />
 
-<!-- Canonical URL -->
-<link rel="canonical" href={url} />
-
-<!-- Idioma e região -->
-<meta http-equiv="content-language" content={SITE.language} />
-<meta name="language" content={SITE.language} />
-
-<!-- Open Graph / Facebook -->
 <meta property="og:locale" content={SITE.locale} />
-<meta property="og:type" content={type} />
-<meta property="og:url" content={url} />
+<meta property="og:type" content={type === 'article' ? 'article' : 'website'} />
+<meta property="og:url" content={canonicalUrl} />
 <meta property="og:site_name" content={SITE.name} />
 <meta property="og:title" content={formattedTitle} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={image} />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content={formattedTitle} />
-
-<!-- Twitter Cards -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content={SITE.twitterHandle} />
-<meta name="twitter:creator" content={SITE.twitterHandle} />
-<meta name="twitter:title" content={formattedTitle} />
-<meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={image} />
-<meta name="twitter:image:alt" content={formattedTitle} />
-
-<!-- Article specific (blog posts) -->
-{type === 'article' && publishedAt && (
+{imageUrl && (
   <>
-    <meta property="article:published_time" content={publishedAt} />
-    {modifiedAt && <meta property="article:modified_time" content={modifiedAt} />}
-    <meta property="article:author" content={author} />
-    <meta property="article:section" content="Saúde e Bem-Estar" />
-    <meta property="article:tag" content={keywords.slice(0, 5).join(', ')} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content={formattedTitle} />
   </>
 )}
 
-<!-- Favicon -->
-<link rel="icon" href="/favicon.ico" sizes="32x32" />
-<link rel="icon" href="/icon.svg" type="image/svg+xml" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={formattedTitle} />
+<meta name="twitter:description" content={description} />
+{imageUrl && (
+  <>
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={formattedTitle} />
+  </>
+)}
+
+{type === 'article' && (
+  <>
+    {publishedAt && <meta property="article:published_time" content={publishedAt} />}
+    {modifiedAt && <meta property="article:modified_time" content={modifiedAt} />}
+  </>
+)}
+
+<link rel="icon" href={SITE.favicon} type="image/svg+xml" />
 <link rel="manifest" href="/manifest.json" />
 <meta name="theme-color" content="#1a3f12" />
 
-<!-- Mobile/App -->
-<meta name="mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-title" content={SITE.name} />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-<!-- Preconnect para performance -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://images.unsplash.com" />

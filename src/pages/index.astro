@@ -1,21 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import HomePage from '../sections/HomePage';
-
-const breadcrumbs = [
-  { name: 'Home', url: 'https://www.alfaaloe.com.br/' },
-];
 ---
-
-<Layout 
-  title="Forever Living | Compre Aloe Vera Gel e Produtos Originais"
-  description="Compre produtos Forever Living Originais. Fale com um Especialista via WhatsApp, receba consultoria exclusiva e adquira seu Aloe Vera Gel puro hoje."
-  image="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=1200&auto=format&fit=crop"
-  type="website"
-  schemaType="localBusiness"
-  schemaTitle="Especialista Forever Living | Aloe Vera Gel e Produtos Naturais"
-  schemaDescription="Compre produtos Forever Living Originais. Fale com um Especialista e receba atendimento consultivo. Aloe Vera Gel, Nutrição e oportunidade FBO via WhatsApp."
-  schemaBreadcrumbs={breadcrumbs}
->
+<Layout title="Alfa Aloe | Produtos Forever para a sua rotina" description="Explore produtos Forever Living de bebidas, beleza, cuidados pessoais e nutrição. Conheça o catálogo Alfa Aloe e consulte valores pelo WhatsApp." schemaType="website">
   <HomePage client:load />
 </Layout>

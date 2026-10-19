@@ -1,21 +1,16 @@
 {
-  "name": "Especialista Forever Living",
-  "short_name": "Forever",
-  "description": "Distribuidor oficial Forever Living. Consultoria em Aloe Vera e oportunidade de negócios FBO.",
+  "name": "Alfa Aloe",
+  "short_name": "Alfa Aloe",
+  "description": "Catálogo de produtos Forever Living e atendimento independente pelo WhatsApp.",
   "start_url": "/",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#ffffff",
   "theme_color": "#1a3f12",
   "icons": [
     {
-      "src": "/icon-192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "/icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
     }
   ]
 }
