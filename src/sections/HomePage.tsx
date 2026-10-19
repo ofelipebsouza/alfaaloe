@@ -1,31 +1,22 @@
-// Helmet removed for Astro migration
-import Header from "../components/Header";
-import Hero from "../components/Hero";
-import AboutFBO from "../components/AboutFBO";
-import Products from "../components/Products";
-import BusinessOpportunity from "../components/BusinessOpportunity";
-import Blog from "../components/Blog";
-import FAQ from "../components/FAQ";
-import LeadCapture from "../components/LeadCapture";
-import Footer from "../components/Footer";
-
+import { ArrowDown, ArrowRight, ArrowUpRight, Leaf, MessageCircle, PackageCheck, Sprout } from 'lucide-react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import CatalogExplorer from '../components/CatalogExplorer';
+import CatalogLead from '../components/CatalogLead';
+import CatalogFAQ from '../components/CatalogFAQ';
+import { createWhatsAppLink } from '../lib/utils';
+import { PRODUCTS } from '../lib/catalog';
 export default function HomePage() {
-  return (
-    <div className="min-h-screen bg-white">
-
-      <Header />
-      <main>
-        <Hero />
-        <AboutFBO />
-        <Products />
-        <div id="negocio">
-          <BusinessOpportunity />
-        </div>
-        <Blog />
-        <FAQ />
-        <LeadCapture />
-      </main>
-      <Footer />
-    </div>
-  );
+  const gel = PRODUCTS.find(p => p.slug === 'aloe-vera-gel')!;
+  const peaches = PRODUCTS.find(p => p.slug === 'aloe-peaches')!;
+  const gelly = PRODUCTS.find(p => p.slug === 'aloe-vera-gelly')!;
+  return <div className="aa-site"><Header/><main id="main">
+    <section className="aa-container aa-hero"><div className="aa-hero-copy"><span className="aa-eyebrow"><span className="aa-status-dot"/> DA NATUREZA PARA A SUA ROTINA</span><h1>Pequenos cuidados.<br/>Mais <span>você.</span></h1><p>Conheça os produtos Forever e encontre novas formas de cuidar de si, com a essência da aloe vera e um atendimento próximo.</p><div className="aa-hero-actions"><a href="#produtos" className="aa-button aa-button-dark">Explorar produtos <ArrowDown size={17}/></a><a href="#atendimento" className="aa-text-link">Quero uma orientação <ArrowUpRight size={16}/></a></div><div className="aa-hero-trust"><span><Leaf size={16}/> Universo aloe vera</span><i/><span>Atendimento pelo WhatsApp</span></div></div><div className="aa-hero-visual"><div className="aa-hero-arc"/><span className="aa-hero-watermark" aria-hidden="true">aloe.</span><img className="aa-hero-product aa-hero-peaches" src={peaches.image} width="500" height="500" alt="Forever Aloe Peaches"/><img className="aa-hero-product aa-hero-gel" src={gel.image} width="500" height="500" alt="Forever Aloe Vera Gel" fetchPriority="high"/><img className="aa-hero-product aa-hero-gelly" src={gelly.image} width="500" height="500" alt="Forever Aloe Vera Gelly"/><span className="aa-hero-label"><Sprout size={17}/> O essencial floresce<br/><strong>nos pequenos hábitos.</strong></span><a className="aa-hero-caption" href="/catalogo?categoria=bebidas">Conheça as bebidas Forever <ArrowUpRight size={15}/></a></div></section>
+    <div className="aa-value-strip"><div className="aa-container"><span>FOREVER LIVING PRODUCTS</span><span><Leaf/> Aloe vera no centro de tudo</span><span><MessageCircle/> Atendimento individual</span><span><PackageCheck/> Compra orientada</span></div></div>
+    <CatalogExplorer/>
+    <section className="aa-container aa-routine"><div className="aa-routine-visual"><img src={gelly.image} alt="Aloe Vera Gelly, cuidado para a pele" width="500" height="500" loading="lazy"/><span className="aa-routine-circle" aria-hidden="true"/><span className="aa-eyebrow">ALOE VERA · CUIDADO DIÁRIO</span></div><div className="aa-routine-copy"><span className="aa-eyebrow">MENOS COMPLICAÇÃO. MAIS CUIDADO.</span><h2>Uma rotina que<br/>faz sentido <span>para você.</span></h2><p>O melhor começo é conhecer suas opções. Das bebidas aos cuidados com a pele, explore as linhas Forever e escolha com informação e tranquilidade.</p><a href="/catalogo?categoria=beleza" className="aa-button aa-button-outline">Descobrir cuidados com a pele <ArrowUpRight size={17}/></a></div></section>
+    <section className="aa-container aa-how" id="como-funciona"><div className="aa-section-heading"><div><span className="aa-eyebrow">DO CATÁLOGO À SUA ROTINA</span><h2>Seu cuidado, <span>sem complicar.</span></h2></div><a className="aa-text-link" href="#atendimento">Fale com a Alfa Aloe <ArrowUpRight size={16}/></a></div><div className="aa-steps">{[{n:'01', title:'Explore no seu tempo', text:'Conheça os produtos e encontre as categorias que combinam com a sua rotina.', icon:<Leaf/>}, {n:'02', title:'Converse com a gente', text:'Tire dúvidas e consulte valores, disponibilidade e condições de compra pelo WhatsApp.',icon:<MessageCircle/>}, {n:'03', title:'Escolha com confiança', text:'Confirme os detalhes do seu pedido e da entrega antes de finalizar a compra.',icon:<PackageCheck/>}].map(step => <div key={step.n}><span className="aa-step-number">{step.n}<span>{step.icon}</span></span><h3>{step.title}</h3><p>{step.text}</p></div>)}</div></section>
+    <CatalogLead/><CatalogFAQ/>
+    <section className="aa-container aa-fbo-note"><div><span className="aa-eyebrow">UM NOVO CAMINHO</span><h3>Quer conhecer a oportunidade Forever?</h3><p>Entenda como funciona a atividade de distribuidor independente.</p></div><a href="/seja-fbo" className="aa-button aa-button-outline">Conhecer o negócio <ArrowRight size={17}/></a></section>
+  </main><Footer/><a className="aa-floating-chat" href={createWhatsAppLink('Olá! Quero conhecer os produtos da Alfa Aloe.')} target="_blank" rel="noopener noreferrer" aria-label="Conversar com a Alfa Aloe no WhatsApp"><MessageCircle size={21}/><span>Vamos conversar</span></a></div>;
 }

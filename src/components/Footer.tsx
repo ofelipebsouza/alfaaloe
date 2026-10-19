@@ -1,18 +1,8 @@
+import { ArrowUpRight, Leaf } from 'lucide-react';
+import { createWhatsAppLink } from '../lib/utils';
 export default function Footer() {
-  return (
-    <footer className="bg-gray-900 border-t border-white/10 text-gray-400 py-12 text-sm text-center">
-      <div className="container mx-auto px-6">
-        <p className="mb-4 text-gray-300 font-medium">Este site é gerido por um Distribuidor Independente (FBO) da Forever Living Products.</p>
-        <p className="max-w-3xl mx-auto mb-8 text-xs opacity-70">
-          As declarações contidas neste site não foram avaliadas por órgãos regulares de saúde locais de forma a diagnosticar, mitigar, tratar, curar ou prevenir qualquer doença. Para orientações médicas, consulte um profissional de saúde qualificado. A exibição do selo FBO garante a aderência às Diretrizes Oficiais Corporativas de vendas diretas.
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mb-8 uppercase tracking-widest text-xs font-bold font-heading text-gray-500">
-          <a href="#" className="hover:text-aloe-400 transition-colors">Aviso Legal</a>
-          <a href="#" className="hover:text-aloe-400 transition-colors">Termos de Uso</a>
-          <a href="#" className="hover:text-aloe-400 transition-colors">Política de Privacidade</a>
-        </div>
-        <p>&copy; {new Date().getFullYear()} Especialista Forever. Todos os direitos reservados.</p>
-      </div>
-    </footer>
-  );
+  return <footer className="aa-footer"><div className="aa-container">
+    <div className="aa-footer-top"><div><a href="/" className="aa-logo"><span className="aa-logo-icon"><Leaf size={25}/></span><span>alfa<span className="aa-logo-light">aloe</span><small>FOREVER · FBO INDEPENDENTE</small></span></a><p>Uma escolha mais consciente.<br/>Um cuidado mais próximo.</p></div><div><span className="aa-eyebrow">EXPLORE</span><a href="/catalogo">Catálogo Forever</a><a href="/seja-fbo">Conheça a oportunidade FBO</a><a href="/blog">Conteúdos e novidades</a></div><div><span className="aa-eyebrow">VAMOS CONVERSAR</span><a href={createWhatsAppLink('Olá! Gostaria de falar com a Alfa Aloe.')} target="_blank" rel="noopener noreferrer">WhatsApp <ArrowUpRight size={16}/></a><span>+55 (13) 99643-2357</span><a href="/privacidade">Privacidade</a></div></div>
+    <div className="aa-footer-bottom"><p>© {new Date().getFullYear()} Alfa Aloe. Distribuidor independente Forever Living.</p><p>Este é um site independente, sem vínculo de representação institucional com a Forever. Imagens e marcas pertencem aos seus respectivos titulares. Informações e disponibilidade devem ser confirmadas no atendimento. Produtos não substituem acompanhamento profissional de saúde.</p></div>
+  </div></footer>;
 }

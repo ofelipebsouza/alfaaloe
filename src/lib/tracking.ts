@@ -31,8 +31,8 @@ export function trackWhatsAppClick(
     typeof window !== 'undefined' &&
     typeof (window as any).trackWhatsAppConversion === 'function'
   ) {
-    const href = (e.currentTarget as HTMLAnchorElement).href;
-    (window as any).trackWhatsAppConversion(href);
+    // Let the native anchor open WhatsApp once; conversion tracking must not redirect again.
+    (window as any).trackWhatsAppConversion();
   }
 }
 

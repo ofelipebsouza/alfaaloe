@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.alfaaloe.com.br/sitemap-index.xml
+Sitemap: https://alfaaloe.vercel.app/sitemap-index.xml

@@ -3,6 +3,7 @@ import '../index.css';
 import SEO from '../components/SEO.astro';
 import SchemaOrg from '../components/SchemaOrg.astro';
 import Tracking from '../components/Tracking.astro';
+import { getCanonicalUrl } from '../lib/seo-config';
 
 export interface Props {
   title?: string;
@@ -40,7 +41,7 @@ const {
   schemaArticleBody,
 } = Astro.props;
 
-const canonicalUrl = Astro.url.href;
+const canonicalUrl = getCanonicalUrl(Astro.url.pathname);
 ---
 
 <!doctype html>
